@@ -1,3 +1,10 @@
+# Database
+gem 'pg'
+gem 'activesupport'
+gem 'activerecord'
+
+gem 'rake'
+
 # Sinatra driver
 gem 'sinatra'
 gem 'sinatra-contrib'
