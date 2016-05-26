@@ -8,9 +8,10 @@ task "console" do
 end
 
 namespace :generate do
+  desc "Generate migration files"
   task :migration do
     unless ENV.has_key?('NAME')
-      raise "Must specificy migration name, e.g., rake generate:migration NAME=create_tasks"
+      raise "Must specify migration name, e.g., rake generate:migration NAME=create_tasks"
     end
 
     name     = ENV['NAME'].camelize
@@ -27,6 +28,28 @@ namespace :generate do
         class #{name} < ActiveRecord::Migration
           def change
           end
+        end
+      EOF
+    end
+  end
+  desc "Generate model class"
+  task :model do
+    unless ENV.has_key?('NAME')
+      raise "Must specify a model name, e.g., rake generate:model NAME=task"
+    end
+
+    name     = ENV['NAME'].camelize
+    filename = "%s.rb" % [ENV['NAME'].underscore]
+    path     = APP_ROOT.join('app', 'models', filename)
+
+    if File.exist?(path)
+      raise "ERROR: File '#{path}' already exists"
+    end
+
+    puts "Creating #{path}"
+    File.open(path, 'w+') do |f|
+      f.write(<<-EOF.strip_heredoc)
+        class #{name} < ActiveRecord::Base
         end
       EOF
     end
